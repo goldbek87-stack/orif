@@ -1,0 +1,6 @@
+{
+  "appId": "uz.orif.blaknoti",
+  "appName": "ORIF BLaknoti",
+  "webDir": "www",
+  "android": { "allowMixedContent": false }
+}

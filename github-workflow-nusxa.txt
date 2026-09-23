@@ -1,0 +1,45 @@
+name: APK yig'ish
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodni olish
+        uses: actions/checkout@v4
+
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Kutubxonalarni o'rnatish
+        run: npm install --legacy-peer-deps
+
+      - name: Hisob-kitob testlari
+        run: npm test
+
+      - name: Android loyihani yangilash
+        run: npx cap sync android
+
+      - name: APK yig'ish
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: APK'ni yuklab olishga qo'yish
+        uses: actions/upload-artifact@v4
+        with:
+          name: orif-blaknoti-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
